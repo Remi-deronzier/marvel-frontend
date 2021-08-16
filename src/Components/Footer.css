@@ -1,0 +1,39 @@
+footer {
+  width: 100%;
+  text-align: center;
+  height: 8rem;
+  background-color: #cac9c9;
+
+  /* Responsive footer */
+  position: absolute;
+  bottom: 0;
+}
+
+.center-footer {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}
+
+.p-footer {
+  font-size: 2rem;
+}
+
+.a-footer {
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+}
+
+.a-footer:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 576px) {
+  .p-footer {
+    font-size: 1.6rem;
+  }
+}

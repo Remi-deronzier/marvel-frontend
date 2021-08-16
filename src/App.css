@@ -1,1 +1,30 @@
-/* Other rules */
+/* GENERAL SETTINGS */
+
+html {
+  font-size: 62.5%; /* Resize `rem` compared to `px` to make easy calculations */
+
+  /* Responsive footer */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 2rem;
+  font-family: "Roboto", sans-serif;
+
+  /* Responsive footer */
+  position: relative;
+  margin: 0;
+  padding-bottom: 8rem;
+  min-height: 100%;
+}
+
+/* BUTTON + ICON */
+
+#submit-btn[disabled="disabled"] {
+  cursor: not-allowed;
+}
+
+/* :disabled {
+  cursor: not-allowed;
+} */
