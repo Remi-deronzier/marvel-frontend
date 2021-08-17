@@ -22,12 +22,16 @@ const ComicsPage = ({
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
 
   const [debouncedSearch] = useDebounce(search, 1000);
 
   let history = useHistory();
 
-  const pageCount = Math.ceil(comics.count / limit);
+  const isExceedPageNoSearch = currentPage > pageCount; // manage the fact that when a user wants to display a high limit but is on a big page number, something is displayed instead of a blank page
+  const isExceedPageWithSearch = debouncedSearch && currentPage > pageCount; // manage event : a user make a research but is on a page higher than 1, thus no results would be displayes which is annoying,
+  const isExceedPage = isExceedPageWithSearch || isExceedPageNoSearch;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +40,7 @@ const ComicsPage = ({
         const queryParams = qs.stringify({
           title: debouncedSearch,
           limit: limit,
-          skip: skip,
+          skip: isExceedPage ? 0 : skip,
         });
         const response = await axios.get(
           `https://marvel-api-remi.herokuapp.com/comics?${queryParams}`
@@ -44,13 +48,18 @@ const ComicsPage = ({
         setComics(response.data);
         setIsGlobalLoading(false);
         setIsLoadingResults(false);
+        setPageCount(Math.ceil(response.data.count / limit));
+        if (isExceedPage) {
+          setCurrentPage(0);
+          setskip(0);
+        }
       } catch (error) {
         alert("an error has occured");
       }
     };
     fetchData();
     document.title = "Marvel Comics";
-  }, [debouncedSearch, limit, skip]);
+  }, [debouncedSearch, limit, skip, isExceedPage]);
 
   // BOOKMARKS
 
@@ -72,11 +81,13 @@ const ComicsPage = ({
 
   const handlePageClick = (data) => {
     const selected = data.selected;
+    setCurrentPage(selected);
     setskip(limit * selected);
   };
 
   const handleChangeSelect = (e) => {
     setLimit(e.target.value);
+    setPageCount(Math.ceil(comics.count / e.target.value));
   };
 
   return isGlobalLoading ? (
@@ -162,6 +173,7 @@ const ComicsPage = ({
           previousClassName={"previous-page"}
           nextClassName={"next-page"}
           disabledClassName={"disabled-previous-and-next-label"}
+          forcePage={currentPage}
         />
       )}
     </>

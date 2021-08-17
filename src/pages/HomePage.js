@@ -26,6 +26,8 @@ const HomePage = ({
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
 
   const [debouncedSearch] = useDebounce(search, 1000);
 
@@ -35,7 +37,9 @@ const HomePage = ({
   const params = qs.parse(location.search.slice(1));
   const onboarding = params.onboarding;
 
-  const pageCount = Math.ceil(data.count / limit);
+  const isExceedPageNoSearch = currentPage > pageCount; // manage the fact that when a user wants to display a high limit but is on a big page number, something is displayed instead of a blank page
+  const isExceedPageWithSearch = debouncedSearch && currentPage > pageCount; // manage event : a user make a research but is on a page higher than 1, thus no results would be displayes which is annoying,
+  const isExceedPage = isExceedPageWithSearch || isExceedPageNoSearch;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,7 +48,7 @@ const HomePage = ({
         const queryParams = qs.stringify({
           name: debouncedSearch,
           limit: limit,
-          skip: skip,
+          skip: isExceedPage ? 0 : skip,
         });
         const response = await axios.get(
           `https://marvel-api-remi.herokuapp.com/characters?${queryParams}`
@@ -52,13 +56,18 @@ const HomePage = ({
         setData(response.data);
         setIsLoadingHomePage(false);
         setIsLoadingResults(false);
+        setPageCount(Math.ceil(response.data.count / limit));
+        if (isExceedPage) {
+          setCurrentPage(0);
+          setskip(0);
+        }
       } catch (error) {
         alert("an error has occured");
       }
     };
     fetchData();
     document.title = "Marvel App Rémi";
-  }, [debouncedSearch, limit, skip]);
+  }, [debouncedSearch, limit, skip, isExceedPage]);
 
   useEffect(() => {
     if (onboarding) {
@@ -98,11 +107,13 @@ const HomePage = ({
 
   const handlePageClick = (data) => {
     const selected = data.selected;
+    setCurrentPage(selected);
     setskip(limit * selected);
   };
 
   const handleChangeSelect = (e) => {
     setLimit(e.target.value);
+    setPageCount(Math.ceil(data.count / e.target.value));
   };
 
   return isLoadingHomePage ? (
@@ -199,6 +210,7 @@ const HomePage = ({
           previousClassName={"previous-page"}
           nextClassName={"next-page"}
           disabledClassName={"disabled-previous-and-next-label"}
+          forcePage={currentPage}
         />
       )}
     </>
