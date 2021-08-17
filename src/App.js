@@ -14,7 +14,6 @@ import "./App.css";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-// import { useDebounce } from "use-debounce";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faBookmark, faEye } from "@fortawesome/free-solid-svg-icons";
 library.add(faBookmark, faEye);

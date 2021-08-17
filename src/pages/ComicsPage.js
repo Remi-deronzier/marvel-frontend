@@ -4,6 +4,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useHistory } from "react-router-dom";
 import Modal from "react-modal";
+import { useDebounce } from "use-debounce";
+import * as qs from "qs";
 
 const ComicsPage = ({
   token,
@@ -15,14 +17,21 @@ const ComicsPage = ({
 }) => {
   const [comics, setComics] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+
+  const [debouncedSearch] = useDebounce(search, 1000);
 
   let history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
+        const queryParams = qs.stringify({
+          title: debouncedSearch,
+        });
         const response = await axios.get(
-          `https://marvel-api-remi.herokuapp.com/comics`
+          `https://marvel-api-remi.herokuapp.com/comics?${queryParams}`
         );
         setComics(response.data);
         setIsLoading(false);
@@ -32,7 +41,7 @@ const ComicsPage = ({
     };
     fetchData();
     document.title = "Marvel Comics";
-  }, []);
+  }, [debouncedSearch]);
 
   // BOOKMARKS
 
@@ -42,6 +51,12 @@ const ComicsPage = ({
     } else {
       history.push("/login");
     }
+  };
+
+  // SEARCH BAR
+
+  const handleChangeSearch = (e) => {
+    setSearch(e.target.value);
   };
 
   return isLoading ? (
@@ -57,6 +72,12 @@ const ComicsPage = ({
         Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
         !!!
       </Modal>
+      <input
+        type="text"
+        placeholder="Rechercher des BDs"
+        onChange={handleChangeSearch}
+        value={search}
+      />
       {comics.results.map((comic, index) => {
         return (
           <div key={index}>
