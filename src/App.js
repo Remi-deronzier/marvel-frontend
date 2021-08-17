@@ -12,6 +12,7 @@ import LoginPage from "./pages/LoginPage";
 import "./App.css";
 
 import Cookies from "js-cookie";
+import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 // import { useDebounce } from "use-debounce";
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -19,54 +20,125 @@ import { faBookmark, faEye } from "@fortawesome/free-solid-svg-icons";
 library.add(faBookmark, faEye);
 
 const App = () => {
-  const [isConnected, setIsConnected] = useState(Cookies.get("token") || "");
+  const [token, setToken] = useState(Cookies.get("token") || "");
+  const [bookmarkName, setBookmarkName] = useState("");
+  const [isBookmarkAddedModalOpen, setIsBookmarkAddedModalOpen] =
+    useState(false);
 
-  const handleLoginSignup = (token, username) => {
+  // LOGIN AND SIGNUP
+
+  const handleLoginSignup = (token, username, id) => {
     Cookies.set("token", token, { expires: 7 });
     Cookies.set("username", username, { expires: 7 });
-    setIsConnected(Cookies.get("token"));
+    Cookies.set("userID", id, { expires: 7 });
+    setToken(Cookies.get("token"));
   };
 
-  const handleSubmissionActivation = () => {
-    document.querySelector("#submit-btn").setAttribute("disabled", "disabled"); // Disable the submit button;
+  // MAKE A REQUEST TO THE SERVER (LOADER + BUTTON)
+
+  const handleSubmission = () => {
+    [...document.querySelectorAll("#submit-btn")].map((e) =>
+      e.setAttribute("disabled", "disabled")
+    ); // Disable the button;
   };
 
-  const handleSubmissionDesactivation = () => {
-    document.querySelector("#submit-btn").removeAttribute("disabled"); // Enable the submit button;
+  const handleEndSubmission = () => {
+    [...document.querySelectorAll("#submit-btn")].map((e) =>
+      e.removeAttribute("disabled")
+    ); // Enable the button;
+  };
+
+  // CREATE A BOOKMARK
+
+  const handleNewBookmark = async (title, description, thumbnail) => {
+    const name = prompt(
+      "Intitulé de ton marque-page",
+      "Mon premier marque-page"
+    );
+    if (name === null || name === "") {
+      return alert("You must specify a name");
+    }
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("thumbnail_path", thumbnail.path);
+    formData.append("thumbnail_extension", thumbnail.extension);
+    try {
+      handleSubmission();
+      await axios.post(
+        "https://marvel-api-remi.herokuapp.com/bookmarks/create",
+        formData,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      handleEndSubmission();
+      setBookmarkName(name);
+      setIsBookmarkAddedModalOpen(true);
+    } catch (error) {
+      handleEndSubmission();
+      alert(error.response.data.message);
+    }
+  };
+
+  // BOOKMARK MODAL
+
+  const handleBookmarkAddedModalClose = () => {
+    setIsBookmarkAddedModalOpen(false);
+  };
+
+  const handleAfterOpenBookmarkModal = () => {
+    setTimeout(() => {
+      setIsBookmarkAddedModalOpen(false);
+    }, 7000);
   };
 
   return (
     <Router>
-      <Header isConnected={isConnected} setIsConnected={setIsConnected} />
+      <Header token={token} setToken={setToken} />
       <Switch>
         <Route exact path="/">
           <HomePage
-            isConnected={isConnected}
-            handleSubmissionActivation={handleSubmissionActivation}
-            handleSubmissionDesactivation={handleSubmissionDesactivation}
+            token={token}
+            bookmarkName={bookmarkName}
+            handleNewBookmark={handleNewBookmark}
+            isBookmarkAddedModalOpen={isBookmarkAddedModalOpen}
+            handleAfterOpenBookmarkModal={handleAfterOpenBookmarkModal}
+            handleBookmarkAddedModalClose={handleBookmarkAddedModalClose}
           />
         </Route>
         <Route path="/character/:id">
           <CharacterPage />
         </Route>
         <Route path="/comics">
-          <ComicsPage />
+          <ComicsPage
+            token={token}
+            bookmarkName={bookmarkName}
+            handleNewBookmark={handleNewBookmark}
+            isBookmarkAddedModalOpen={isBookmarkAddedModalOpen}
+            handleAfterOpenBookmarkModal={handleAfterOpenBookmarkModal}
+            handleBookmarkAddedModalClose={handleBookmarkAddedModalClose}
+          />
         </Route>
         <Route path="/bookmarks">
-          <BookmarksPage isConnected={isConnected} />
+          <BookmarksPage token={token} />
         </Route>
         <Route path="/login">
           <LoginPage
             handleLoginSignup={handleLoginSignup}
-            handleSubmissionActivation={handleSubmissionActivation}
-            handleSubmissionDesactivation={handleSubmissionDesactivation}
+            handleFormSubmission={handleSubmission}
+            handleFormEndSubmission={handleEndSubmission}
           />
         </Route>
         <Route path="/signup">
           <SignupPage
             handleLoginSignup={handleLoginSignup}
-            handleSubmissionActivation={handleSubmissionActivation}
-            handleSubmissionDesactivation={handleSubmissionDesactivation}
+            handleFormSubmission={handleSubmission}
+            handleFormEndSubmission={handleEndSubmission}
           />
         </Route>
       </Switch>

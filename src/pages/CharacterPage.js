@@ -17,7 +17,7 @@ const CharacterPage = () => {
         );
         setData(response.data);
         setIsLoading(false);
-        document.title = `${response.data.name} - Vinted`;
+        document.title = `${response.data.name} - Marvel`;
       } catch (error) {
         alert("an error has occured");
       }

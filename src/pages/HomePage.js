@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as qs from "qs";
 import Modal from "react-modal";
 import Cookies from "js-cookie";
 
 const HomePage = ({
-  isConnected,
-  handleSubmissionDesactivation,
-  handleSubmissionActivation,
+  token,
+  bookmarkName,
+  handleNewBookmark,
+  isBookmarkAddedModalOpen,
+  handleAfterOpenBookmarkModal,
+  handleBookmarkAddedModalClose,
 }) => {
   const [data, setData] = useState({});
   const [isLoadingHomePage, setIsLoadingHomePage] = useState(true);
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
+
+  let history = useHistory();
 
   const location = useLocation();
   const params = qs.parse(location.search.slice(1));
@@ -39,45 +44,27 @@ const HomePage = ({
 
   useEffect(() => {
     if (onboarding) {
-      setIsWelcomeModalOpen(true);
+      setIsWelcomeModalOpen(true); // trigger a welcome modal when the user sign up for the first time
     }
-  }, [onboarding]); // trigger a welcome modal when the user sign up for the first time
+  }, [onboarding]);
 
   // BOOKMARKS
 
   const handleCreateBookmark = async (title, description, thumbnail) => {
-    const name = prompt("Name");
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("thumbnail", thumbnail);
-    console.log(formData);
-    try {
-      handleSubmissionActivation();
-      await axios.post(
-        "https://marvel-api-remi.herokuapp.com/bookmarks/create",
-        formData,
-        {
-          headers: {
-            Authorization: "Bearer " + isConnected,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      handleSubmissionDesactivation();
-    } catch (error) {
-      alert(error.response.data.message);
+    if (token) {
+      await handleNewBookmark(title, description, thumbnail);
+    } else {
+      history.push("/login");
     }
   };
 
-  // WELCOME MODAL
+  // MODALs
 
   const handleWelcomeModalClose = () => {
     setIsWelcomeModalOpen(false);
   };
 
-  const handleAfterOpenFunc = () => {
+  const handleAfterOpenWelcomeModal = () => {
     setTimeout(() => {
       setIsWelcomeModalOpen(false);
     }, 7000);
@@ -90,11 +77,20 @@ const HomePage = ({
       <Modal
         isOpen={isWelcomeModalOpen}
         onRequestClose={handleWelcomeModalClose}
-        onAfterOpen={handleAfterOpenFunc}
+        onAfterOpen={handleAfterOpenWelcomeModal}
         ariaHideApp={false}
       >
-        Bonjour <span>{Cookies.get("username")}</span>, bienvenue sur la
-        meilleure API de MARVEL ! 🎉
+        Bonjour <u>{Cookies.get("username")}</u>, bienvenue sur la meilleure API
+        de MARVEL ! 🎉
+      </Modal>
+      <Modal
+        isOpen={isBookmarkAddedModalOpen}
+        onRequestClose={handleBookmarkAddedModalClose}
+        onAfterOpen={handleAfterOpenBookmarkModal}
+        ariaHideApp={false}
+      >
+        Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
+        !!!
       </Modal>
       {data.results.map((character, index) => {
         return (
@@ -107,8 +103,7 @@ const HomePage = ({
               <p>{character.name}</p>
               <p>{character.description}</p>
             </Link>
-            <FontAwesomeIcon
-              icon="bookmark"
+            <button
               id="submit-btn"
               onClick={() =>
                 handleCreateBookmark(
@@ -117,7 +112,9 @@ const HomePage = ({
                   character.thumbnail
                 )
               }
-            />
+            >
+              <FontAwesomeIcon icon="bookmark" />
+            </button>
           </div>
         );
       })}

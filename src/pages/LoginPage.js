@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const LoginPage = ({
   handleLoginSignup,
-  handleSubmissionActivation,
-  handleSubmissionDesactivation,
+  handleFormSubmission,
+  handleFormEndSubmission,
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,16 +25,16 @@ const LoginPage = ({
       password: password,
     };
     try {
-      handleSubmissionActivation();
+      handleFormSubmission();
       const response = await axios.post(
         "https://marvel-api-remi.herokuapp.com/user/login",
         data
       );
-      const { token, username } = response.data;
-      handleLoginSignup(token, username);
+      const { token, username, _id } = response.data;
+      handleLoginSignup(token, username, _id);
       history.push("/bookmarks");
     } catch (error) {
-      handleSubmissionDesactivation();
+      handleFormEndSubmission();
       alert(error.response.data.message);
     }
   };

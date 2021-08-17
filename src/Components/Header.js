@@ -4,13 +4,13 @@ import logoMarvel from "../images/logo-marvel.svg";
 import { Link, useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const Header = ({ isConnected, setIsConnected }) => {
+const Header = ({ token, setToken }) => {
   let history = useHistory();
 
   const handleLogout = () => {
     Cookies.remove("token");
     Cookies.remove("username");
-    setIsConnected("");
+    setToken("");
     history.push("/");
   };
 
@@ -28,7 +28,7 @@ const Header = ({ isConnected, setIsConnected }) => {
       <Link to="/bookmarks">
         <button>Favoris</button>
       </Link>
-      {!isConnected ? (
+      {!token ? (
         <>
           <Link to="/signup">
             <button>S'inscrire</button>
@@ -40,7 +40,7 @@ const Header = ({ isConnected, setIsConnected }) => {
       ) : (
         <button onClick={handleLogout}>Se déconnecter</button>
       )}
-      {isConnected && <span>{Cookies.get("username")}</span>}
+      {token && <span>{Cookies.get("username")}</span>}
     </header>
   );
 };
