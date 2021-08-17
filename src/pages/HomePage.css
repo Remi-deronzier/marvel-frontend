@@ -1,0 +1,28 @@
+.pagination {
+  display: flex;
+}
+
+.page,
+.break-me,
+.previous-page,
+.next-page {
+  cursor: pointer;
+  border: 1px solid #000;
+}
+
+.active {
+  background-color: blue;
+  color: #fff;
+}
+
+.previous-page {
+  margin-right: 1rem;
+}
+
+.next-page {
+  margin-left: 1rem;
+}
+
+.disabled-previous-and-next-label {
+  display: none;
+}

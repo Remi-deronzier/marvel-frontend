@@ -24,3 +24,7 @@ body {
 button[disabled="disabled"] {
   cursor: not-allowed;
 }
+
+button {
+  cursor: pointer;
+}
