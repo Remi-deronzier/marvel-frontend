@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+import {
+  AutosuggestHighlightMatch,
+  escapeRegexCharacters,
+} from "../helpers/helper";
+
 import "./HomePage.css";
 
 import axios from "axios";
@@ -10,6 +15,9 @@ import Modal from "react-modal";
 import Cookies from "js-cookie";
 import { useDebounce } from "use-debounce";
 import ReactPaginate from "react-paginate";
+import AutosuggestHighlightParse from "autosuggest-highlight/parse";
+
+import Autosuggest from "react-autosuggest";
 
 const HomePage = ({
   token,
@@ -19,17 +27,23 @@ const HomePage = ({
   handleAfterOpenBookmarkModal,
   handleBookmarkAddedModalClose,
 }) => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({}); // data which is updated each time a research is made
+  const [wholeData, setWholeData] = useState([]); // data which is fetched just once: when the page is loaded.
+  // `wholeData` is used for the Autosuggest component
   const [isLoadingHomePage, setIsLoadingHomePage] = useState(true);
   const [isLoadingResults, setIsLoadingResults] = useState(true);
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [searchAutosuggest, setSearchAutosuggest] = useState("");
+  const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [forcePage, setForcePage] = useState(0); // to override selected page when a user is on a high number page and change the limit or make a research. Thus, this state enables to prevent from rendering a blank page !!!
 
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(
+    escapeRegexCharacters(searchAutosuggest),
+    1000
+  ); // Wait a bit before reloading the page
 
   let history = useHistory();
 
@@ -38,6 +52,20 @@ const HomePage = ({
   const onboarding = params.onboarding;
 
   const pageCount = Math.ceil(data.count / limit);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://marvel-api-remi.herokuapp.com/characters`
+        );
+        setWholeData(response.data.results);
+      } catch (error) {
+        alert("an error has occured");
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,12 +120,6 @@ const HomePage = ({
     }, 7000);
   };
 
-  // SEARCH BAR
-
-  const handleChangeSearch = (e) => {
-    setSearch(e.target.value);
-  };
-
   // PAGINATION
 
   const handlePageClick = (data) => {
@@ -108,6 +130,62 @@ const HomePage = ({
 
   const handleChangeSelect = (e) => {
     setLimit(e.target.value);
+  };
+
+  // SEARCCH BAR WITH AUTOCOMPLETION
+
+  const getSuggestions = (value) => {
+    const escapedValue = escapeRegexCharacters(value.trim());
+    if (escapedValue === "") {
+      return [];
+    }
+    const regex = new RegExp(escapedValue, "i");
+    return wholeData.filter((character) => regex.test(character.name));
+  };
+
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion, { query }) => {
+    const suggestionText = suggestion.name;
+    const matches = AutosuggestHighlightMatch(suggestionText, query);
+    const parts = AutosuggestHighlightParse(suggestionText, matches);
+
+    return (
+      <div>
+        <img
+          className="thumbnail"
+          src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
+          alt=""
+        />
+        {parts.map((part, index) => {
+          const className = part.highlight ? "highlight" : null;
+          return (
+            <span className={className} key={index}>
+              {part.text}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const handleOnChange = (event, { newValue }) => {
+    setSearchAutosuggest(newValue);
+  };
+
+  const inputProps = {
+    placeholder: "Rechercher des personnages de BD",
+    value: searchAutosuggest,
+    onChange: handleOnChange,
+    type: "search",
   };
 
   return isLoadingHomePage ? (
@@ -132,30 +210,32 @@ const HomePage = ({
         Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
         !!!
       </Modal>{" "}
+      <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        inputProps={inputProps}
+      />
+      <br />
+      <label>
+        Nombre de résultats à afficher :
+        <select
+          value={limit}
+          onChange={handleChangeSelect}
+          className="select-page-nb-display"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </label>
       {isLoadingResults ? (
         <p>Chargement des résultats...</p>
       ) : (
         <div>
-          <input
-            type="text"
-            placeholder="Rechercher des personnages de BD"
-            onChange={handleChangeSearch}
-            value={search}
-          />
-          <br />
-          <label>
-            Nombre de résultats à afficher :
-            <select
-              value={limit}
-              onChange={handleChangeSelect}
-              className="select-page-nb-display"
-            >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </label>
           {data.count === 0 ? (
             <p>Aucun résultat trouvé 😥 !!!</p>
           ) : (

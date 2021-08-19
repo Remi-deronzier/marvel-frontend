@@ -1,3 +1,5 @@
+/* PAGINATION */
+
 .pagination {
   display: flex;
 }
@@ -25,4 +27,26 @@
 
 .disabled-previous-and-next-label {
   display: none;
+}
+
+/* AUTOSUGGEST */
+
+.highlight {
+  color: #ee0000;
+  font-weight: bold;
+}
+
+.thumbnail {
+  width: 30px;
+  height: 30px;
+}
+
+.react-autosuggest__container {
+  position: relative;
+}
+
+.react-autosuggest__suggestions-container {
+  background-color: gray;
+  position: absolute;
+  top: 30px;
 }
