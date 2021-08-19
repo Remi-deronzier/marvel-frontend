@@ -27,7 +27,7 @@ const HomePage = ({
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
+  const [forcePage, setForcePage] = useState(0); // to override selected page when a user is on a high number page and change the limit or make a research. Thus, this state enables to prevent from rendering a blank page !!!
 
   const [debouncedSearch] = useDebounce(search, 1000);
 
@@ -37,9 +37,7 @@ const HomePage = ({
   const params = qs.parse(location.search.slice(1));
   const onboarding = params.onboarding;
 
-  const isExceedPageNoSearch = currentPage > pageCount; // manage the fact that when a user wants to display a high limit but is on a big page number, something is displayed instead of a blank page
-  const isExceedPageWithSearch = debouncedSearch && currentPage > pageCount; // manage event : a user make a research but is on a page higher than 1, thus no results would be displayes which is annoying,
-  const isExceedPage = isExceedPageWithSearch || isExceedPageNoSearch;
+  const pageCount = Math.ceil(data.count / limit);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,26 +46,23 @@ const HomePage = ({
         const queryParams = qs.stringify({
           name: debouncedSearch,
           limit: limit,
-          skip: isExceedPage ? 0 : skip,
+          skip: skip,
+          currentPage: currentPage,
         });
         const response = await axios.get(
           `https://marvel-api-remi.herokuapp.com/characters?${queryParams}`
         );
+        setForcePage(Number(response.data.currentPage));
         setData(response.data);
         setIsLoadingHomePage(false);
         setIsLoadingResults(false);
-        setPageCount(Math.ceil(response.data.count / limit));
-        if (isExceedPage) {
-          setCurrentPage(0);
-          setskip(0);
-        }
       } catch (error) {
         alert("an error has occured");
       }
     };
     fetchData();
     document.title = "Marvel App Rémi";
-  }, [debouncedSearch, limit, skip, isExceedPage]);
+  }, [debouncedSearch, limit, skip, currentPage]);
 
   useEffect(() => {
     if (onboarding) {
@@ -113,7 +108,6 @@ const HomePage = ({
 
   const handleChangeSelect = (e) => {
     setLimit(e.target.value);
-    setPageCount(Math.ceil(data.count / e.target.value));
   };
 
   return isLoadingHomePage ? (
@@ -210,7 +204,7 @@ const HomePage = ({
           previousClassName={"previous-page"}
           nextClassName={"next-page"}
           disabledClassName={"disabled-previous-and-next-label"}
-          forcePage={currentPage}
+          forcePage={forcePage}
         />
       )}
     </>
