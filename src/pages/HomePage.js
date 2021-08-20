@@ -5,8 +5,6 @@ import {
   escapeRegexCharacters,
 } from "../helpers/helper";
 
-import "./HomePage.css";
-
 import axios from "axios";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +14,6 @@ import Cookies from "js-cookie";
 import { useDebounce } from "use-debounce";
 import ReactPaginate from "react-paginate";
 import AutosuggestHighlightParse from "autosuggest-highlight/parse";
-
 import Autosuggest from "react-autosuggest";
 
 const HomePage = ({
@@ -64,6 +61,7 @@ const HomePage = ({
         alert("an error has occured");
       }
     };
+    document.title = "Marvel App Rémi";
     fetchData();
   }, []);
 
@@ -89,7 +87,6 @@ const HomePage = ({
       }
     };
     fetchData();
-    document.title = "Marvel App Rémi";
   }, [debouncedSearch, limit, skip, currentPage]);
 
   useEffect(() => {
@@ -132,7 +129,7 @@ const HomePage = ({
     setLimit(e.target.value);
   };
 
-  // SEARCCH BAR WITH AUTOCOMPLETION
+  // SEARCH BAR WITH AUTOCOMPLETION
 
   const getSuggestions = (value) => {
     const escapedValue = escapeRegexCharacters(value.trim());
