@@ -1,0 +1,49 @@
+.card {
+  width: calc(33.3333% - 2rem);
+  margin-bottom: 5rem;
+}
+
+.card:not(:nth-child(3n)) {
+  margin-right: 3rem;
+}
+
+.card-title {
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 3rem;
+  height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.card-title p {
+  line-height: 4rem;
+}
+
+.card-image {
+  width: 100%;
+  height: 40rem;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-details {
+  padding: 4rem 8rem;
+  background-color: #fff;
+}
+
+.card-description {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.card-call-to-action {
+  display: flex;
+  justify-content: space-between;
+}

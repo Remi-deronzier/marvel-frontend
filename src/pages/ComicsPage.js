@@ -128,7 +128,7 @@ const ComicsPage = ({
         <img
           className="thumbnail"
           src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
-          alt=""
+          alt={suggestion.title}
         />
         {parts.map((part, index) => {
           const className = part.highlight ? "highlight" : null;
@@ -182,12 +182,6 @@ const ComicsPage = ({
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
       />
-      {/* <input
-            type="text"
-            placeholder="Rechercher des BDs"
-            onChange={handleChangeSearch}
-            value={searchAutosuggest}
-          /> */}
       <br />
       <label>
         Nombre de résultats à afficher :

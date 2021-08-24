@@ -4,10 +4,12 @@ import {
   AutosuggestHighlightMatch,
   escapeRegexCharacters,
 } from "../helpers/helper";
+import Card from "../Components/Card";
+
+import "./HomePage.css";
 
 import axios from "axios";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "qs";
 import Modal from "react-modal";
 import Cookies from "js-cookie";
@@ -137,7 +139,16 @@ const HomePage = ({
       return [];
     }
     const regex = new RegExp(escapedValue, "i");
-    return wholeData.filter((character) => regex.test(character.name));
+    const maxSuggestionsToDisplay = 7;
+    return wholeData.reduce((res, character) => {
+      if (
+        regex.test(character.name) &&
+        res.length <= maxSuggestionsToDisplay - 1 // add -1 to have exactly 7 suggestions at most instead of 8 otherwise
+      ) {
+        res.push(character);
+      }
+      return res;
+    }, []);
   };
 
   const getSuggestionValue = (suggestion) => suggestion.name;
@@ -148,11 +159,11 @@ const HomePage = ({
     const parts = AutosuggestHighlightParse(suggestionText, matches);
 
     return (
-      <div>
+      <div className="suggestion-content">
         <img
           className="thumbnail"
           src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
-          alt=""
+          alt={suggestion.name}
         />
         {parts.map((part, index) => {
           const className = part.highlight ? "highlight" : null;
@@ -179,11 +190,22 @@ const HomePage = ({
   };
 
   const inputProps = {
-    placeholder: "Rechercher des personnages de BD",
+    placeholder: "Aveng...",
     value: searchAutosuggest,
     onChange: handleOnChange,
-    type: "search",
   };
+
+  // MANAGE SEARCH BAR STYLE ACCORDING TO SCROLL
+
+  window.addEventListener("scroll", () => {
+    let scroll = window.scrollY; // Axe Y
+    const elem = document.querySelector(".react-autosuggest__input");
+    if (scroll < 100) {
+      elem.style.width = "100%";
+    } else {
+      elem.style.width = "20%";
+    }
+  });
 
   return isLoadingHomePage ? (
     <p>En cours de chargement...</p>
@@ -207,83 +229,74 @@ const HomePage = ({
         Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
         !!!
       </Modal>{" "}
-      <Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={onSuggestionsClearRequested}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-      />
-      <br />
-      <label>
-        Nombre de résultats à afficher :
-        <select
-          value={limit}
-          onChange={handleChangeSelect}
-          className="select-page-nb-display"
-        >
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-      </label>
-      {isLoadingResults ? (
-        <p>Chargement des résultats...</p>
-      ) : (
-        <div>
-          {data.count === 0 ? (
-            <p>Aucun résultat trouvé 😥 !!!</p>
-          ) : (
-            data.results.map((character, index) => {
-              return (
-                <div key={index}>
-                  <Link to={`/character/${character._id}`}>
-                    <img
-                      src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                      alt={character.name}
-                    />
-                    <p>{character.name}</p>
-                    <p>{character.description}</p>
-                  </Link>
-                  <button
-                    id="submit-btn"
-                    onClick={() =>
-                      handleCreateBookmark(
-                        character.name,
-                        character.description,
-                        character.thumbnail
-                      )
-                    }
-                  >
-                    <FontAwesomeIcon icon="bookmark" />
-                  </button>
-                </div>
-              );
-            })
-          )}
-        </div>
-      )}{" "}
-      {data.count !== 0 && (
-        <ReactPaginate
-          previousLabel={"previous"}
-          nextLabel={"next"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-          pageClassName={"page"}
-          previousClassName={"previous-page"}
-          nextClassName={"next-page"}
-          disabledClassName={"disabled-previous-and-next-label"}
-          forcePage={forcePage}
+      <div className="container main-content-wrapper">
+        <h2>Recherche ton super-héros préféré</h2>
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={onSuggestionsClearRequested}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+          inputProps={inputProps}
         />
-      )}
+        <div className="pagination-top">
+          <p>{data.count} résultats</p>
+          <label>
+            Nombre de résultats à afficher :
+            <select
+              className="select-limit"
+              value={limit}
+              onChange={handleChangeSelect}
+            >
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+        </div>
+        {isLoadingResults ? (
+          <p>Chargement des résultats...</p>
+        ) : (
+          <div className="main-content">
+            {data.count === 0 ? (
+              <div className="no-results">
+                <p className="p-no-results">Aucun résultat trouvé 😥 !!!</p>
+              </div>
+            ) : (
+              data.results.map((character, index) => {
+                return (
+                  <Card
+                    index={index}
+                    key={index}
+                    character={character}
+                    handleCreateBookmark={handleCreateBookmark}
+                  />
+                );
+              })
+            )}
+          </div>
+        )}{" "}
+        {data.count !== 0 && (
+          <ReactPaginate
+            previousLabel={"<"}
+            nextLabel={">"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={pageCount}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            activeClassName={"active"}
+            pageClassName={"page"}
+            previousClassName={"previous-page"}
+            nextClassName={"next-page"}
+            disabledClassName={"disabled-previous-and-next-label"}
+            forcePage={forcePage}
+          />
+        )}
+      </div>
     </>
   );
 };

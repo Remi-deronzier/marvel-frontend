@@ -1,8 +1,11 @@
+import CurtainMenu from "./CurtainMenu";
+
 import "./Header.css";
 import logoMarvel from "../images/logo-marvel.svg";
 
 import { Link, useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
+import Avatar from "react-avatar";
 
 const Header = ({ token, setToken }) => {
   let history = useHistory();
@@ -16,31 +19,59 @@ const Header = ({ token, setToken }) => {
 
   return (
     <header>
-      <Link to="/">
-        <img src={logoMarvel} alt="logo Marvel" />
-      </Link>
-      <Link to="/">
-        <button>Personnages</button>
-      </Link>
-      <Link to="/comics">
-        <button>Comics</button>
-      </Link>
-      <Link to="/bookmarks">
-        <button>Favoris</button>
-      </Link>
-      {!token ? (
-        <>
-          <Link to="/signup">
-            <button>S'inscrire</button>
+      <div className="container wrapper-header">
+        <div className="header-call1">
+          <Link to="/">
+            <img src={logoMarvel} alt="logo Marvel" />
           </Link>
-          <Link to="/login">
-            <button>Se connecter</button>
+        </div>
+        <div className="header-call2">
+          <Link to="/">
+            <button className="btn-header-margin button-with-red-border">
+              Accueil
+            </button>
           </Link>
-        </>
-      ) : (
-        <button onClick={handleLogout}>Se déconnecter</button>
-      )}
-      {token && <span>{Cookies.get("username")}</span>}
+          <Link to="/comics">
+            <button className="btn-header-margin button-with-red-border">
+              BD
+            </button>
+          </Link>
+          <Link to="/bookmarks">
+            <button className="btn-header-margin button-with-red-border">
+              Favoris
+            </button>
+          </Link>
+          {!token ? (
+            <>
+              <Link to="/signup">
+                <button className="btn-header-margin button-filled-with-red">
+                  S'inscrire
+                </button>
+              </Link>
+              <Link to="/login">
+                <button className="button-filled-with-red">Se connecter</button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <button onClick={handleLogout} className="button-filled-with-red">
+                Se déconnecter
+              </button>
+              <Avatar
+                name={Cookies.get("username")}
+                className="avatar-header"
+                size="4rem"
+                textSizeRatio={2}
+              />
+            </>
+          )}
+        </div>
+        <CurtainMenu
+          token={token}
+          setToken={setToken}
+          className="curtain-menu"
+        />
+      </div>
     </header>
   );
 };

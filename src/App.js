@@ -15,8 +15,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faBookmark, faEye } from "@fortawesome/free-solid-svg-icons";
-library.add(faBookmark, faEye);
+import {
+  faBookmark,
+  faEye,
+  faTimes,
+  faBars,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
+library.add(faBookmark, faEye, faTimes, faBars, faSearch);
 
 const App = () => {
   const [token, setToken] = useState(Cookies.get("token") || "");

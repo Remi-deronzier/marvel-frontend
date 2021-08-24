@@ -1,3 +1,12 @@
+:root {
+  --main-red: #f60c02;
+  --main-gray: #757575;
+  --transition-time-curtain-menu: 0.5s;
+  --transition-time-hover: 0.3s;
+  --header-heigth: 8rem;
+  --width-search-bar: 50%;
+}
+
 /* GENERAL SETTINGS */
 
 html {
@@ -11,12 +20,26 @@ html {
 body {
   font-size: 2rem;
   font-family: "Roboto", sans-serif;
+  background-color: #292d33;
 
   /* Responsive footer */
   position: relative;
   margin: 0;
-  padding-bottom: 8rem;
+  padding-bottom: 6rem;
   min-height: 100%;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+/* TITLE */
+
+h2 {
+  font-size: 4rem;
+  text-align: center;
+  color: #fff;
 }
 
 /* BUTTON */
@@ -26,67 +49,33 @@ button[disabled="disabled"] {
 }
 
 button {
-  cursor: pointer;
-}
-
-/* PAGINATION */
-
-.pagination {
-  display: flex;
-}
-
-.page,
-.break-me,
-.previous-page,
-.next-page {
-  cursor: pointer;
-  border: 1px solid #000;
-}
-
-.active {
-  background-color: blue;
-  color: #fff;
-}
-
-.previous-page {
-  margin-right: 1rem;
-}
-
-.next-page {
-  margin-left: 1rem;
-}
-
-.disabled-previous-and-next-label {
-  display: none;
-}
-
-/* AUTOSUGGEST */
-
-.highlight {
-  color: #ee0000;
+  text-transform: uppercase;
+  outline: none;
+  border: none;
+  padding: 1rem 2rem;
   font-weight: bold;
-}
-
-.thumbnail {
-  width: 30px;
-  height: 30px;
-}
-
-.react-autosuggest__container {
-  position: relative;
-}
-
-.react-autosuggest__suggestions-container {
-  background-color: gray;
-  position: absolute;
-  top: 30px;
-}
-
-.react-autosuggest__suggestion {
   cursor: pointer;
+  font-family: "Roboto", sans-serif;
 }
 
-.react-autosuggest__suggestion:hover {
+.button-filled-with-red {
+  background-color: var(--main-red);
   color: #fff;
-  background-color: blue;
+}
+
+.button-with-red-border {
+  background-color: #fff;
+  border: 0.1rem solid var(--main-red);
+  color: var(--main-red);
+  box-sizing: border-box;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .container {
+    width: auto;
+    padding: 0 3rem;
+    box-sizing: border-box;
+  }
 }

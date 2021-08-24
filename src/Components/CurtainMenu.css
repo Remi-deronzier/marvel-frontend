@@ -1,0 +1,81 @@
+.background-menu {
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity var(--transition-time-curtain-menu);
+}
+
+.overlay,
+.background-menu {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.overlay {
+  width: 0;
+  transition: width var(--transition-time-curtain-menu);
+  background-color: #000;
+}
+
+.overlay-content {
+  position: relative;
+  top: 15%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.overlay a {
+  padding: 0.8rem;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  transition: var(--transition-time-hover);
+}
+
+.overlay a,
+.btn-curtain-menu {
+  font-size: 2.5rem;
+}
+
+.btn-curtain-menu {
+  margin: 0.8rem;
+  font-weight: normal;
+}
+
+.overlay a:hover {
+  color: #a3a2a2;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 3rem;
+  color: #fff;
+}
+
+.close-btn,
+.icon-curtain-menu {
+  font-size: 4rem;
+}
+
+.close-btn:hover {
+  cursor: pointer;
+}
+
+.icon-curtain-menu:hover {
+  cursor: pointer;
+}
+
+.icon-curtain-menu {
+  margin-left: 2rem;
+}
+
+.bar-avatar {
+  display: flex;
+  align-items: center;
+}
