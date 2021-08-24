@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import CharacterPage from "./pages/CharacterPage";
 import HomePage from "./pages/HomePage";
@@ -40,26 +40,13 @@ const App = () => {
   // `wholeData` is used for the Autosuggest component
   const [searchAutosuggest, setSearchAutosuggest] = useState("");
   const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
+  const [keyTitle, setKeyTitle] = useState("");
+  const [placeholderAutosuggest, setPlaceholderAutosuggest] = useState("");
 
   const [debouncedSearch] = useDebounce(
     escapeRegexCharacters(searchAutosuggest),
     1000
   ); // Wait a bit before reloading the page
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://marvel-api-remi.herokuapp.com/characters`
-        );
-        setWholeData(response.data.results);
-      } catch (error) {
-        alert("an error has occured");
-      }
-    };
-    document.title = "Marvel App Rémi";
-    fetchData();
-  }, []);
 
   // SEARCH BAR WITH AUTOCOMPLETION
 
@@ -70,21 +57,21 @@ const App = () => {
     }
     const regex = new RegExp(escapedValue, "i");
     const maxSuggestionsToDisplay = 7;
-    return wholeData.reduce((res, character) => {
+    return wholeData.reduce((res, element) => {
       if (
-        regex.test(character.name) &&
+        regex.test(element[keyTitle]) &&
         res.length <= maxSuggestionsToDisplay - 1 // add -1 to have exactly 7 suggestions at most instead of 8 otherwise
       ) {
-        res.push(character);
+        res.push(element);
       }
       return res;
     }, []);
   };
 
-  const getSuggestionValue = (suggestion) => suggestion.name;
+  const getSuggestionValue = (suggestion) => suggestion[keyTitle];
 
   const renderSuggestion = (suggestion, { query }) => {
-    const suggestionText = suggestion.name;
+    const suggestionText = suggestion[keyTitle];
     const matches = AutosuggestHighlightMatch(suggestionText, query);
     const parts = AutosuggestHighlightParse(suggestionText, matches);
 
@@ -93,7 +80,7 @@ const App = () => {
         <img
           className="thumbnail"
           src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
-          alt={suggestion.name}
+          alt={suggestion[keyTitle]}
         />
         {parts.map((part, index) => {
           const className = part.highlight ? "highlight" : null;
@@ -120,10 +107,24 @@ const App = () => {
   };
 
   const inputProps = {
-    placeholder: "Aven..",
+    placeholder: placeholderAutosuggest,
     value: searchAutosuggest,
     onChange: handleOnChange,
   };
+
+  // MANAGE SEARCH BAR STYLE ACCORDING TO SCROLL
+
+  window.addEventListener("scroll", () => {
+    let scroll = window.scrollY; // Axe Y
+    const elem = [...document.querySelectorAll(".react-autosuggest__input")][1]; // select the second search bar (not the first search bar in the header)
+    if (elem) {
+      if (scroll < 100) {
+        elem.style.width = "calc(100% - 2rem)";
+      } else {
+        elem.style.width = "25%";
+      }
+    }
+  });
 
   // LOGIN AND SIGNUP
 
@@ -225,9 +226,12 @@ const App = () => {
             onSuggestionsFetchRequested={onSuggestionsFetchRequested}
             suggestions={suggestions}
             debouncedSearch={debouncedSearch}
+            setWholeData={setWholeData}
+            setKeyTitle={setKeyTitle}
+            setPlaceholderAutosuggest={setPlaceholderAutosuggest}
           />
         </Route>
-        <Route path="/character/:id">
+        <Route path="/element/:id">
           <CharacterPage />
         </Route>
         <Route path="/comics">
@@ -238,6 +242,16 @@ const App = () => {
             isBookmarkAddedModalOpen={isBookmarkAddedModalOpen}
             handleAfterOpenBookmarkModal={handleAfterOpenBookmarkModal}
             handleBookmarkAddedModalClose={handleBookmarkAddedModalClose}
+            inputProps={inputProps}
+            renderSuggestion={renderSuggestion}
+            getSuggestionValue={getSuggestionValue}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            suggestions={suggestions}
+            debouncedSearch={debouncedSearch}
+            setWholeData={setWholeData}
+            setKeyTitle={setKeyTitle}
+            setPlaceholderAutosuggest={setPlaceholderAutosuggest}
           />
         </Route>
         <Route path="/bookmarks">

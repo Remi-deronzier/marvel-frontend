@@ -10,7 +10,6 @@
 .card-title {
   color: #fff;
   text-transform: uppercase;
-  font-size: 3rem;
   height: 12rem;
   display: flex;
   align-items: center;
@@ -20,8 +19,14 @@
   box-sizing: border-box;
 }
 
-.card-title p {
+.card-title-characters {
+  font-size: 3rem;
   line-height: 4rem;
+}
+
+.card-title-comics {
+  font-size: 2.6rem;
+  line-height: 3rem;
 }
 
 .card-image {
@@ -47,7 +52,14 @@
 
 .card-call-to-action {
   display: flex;
+}
+
+.card-call-to-action-characters {
   justify-content: space-between;
+}
+
+.card-call-to-action-comics {
+  justify-content: center;
 }
 
 /* RESPONSIVE */
@@ -55,6 +67,11 @@
 @media (max-width: 1260px) {
   .card-details {
     padding: 2rem 4rem;
+  }
+
+  .card-title-comics {
+    line-height: 3rem;
+    font-size: 2rem;
   }
 }
 
