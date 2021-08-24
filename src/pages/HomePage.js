@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
 
-import {
-  AutosuggestHighlightMatch,
-  escapeRegexCharacters,
-} from "../helpers/helper";
 import Card from "../Components/Card";
 
 import "./HomePage.css";
@@ -13,9 +9,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import * as qs from "qs";
 import Modal from "react-modal";
 import Cookies from "js-cookie";
-import { useDebounce } from "use-debounce";
 import ReactPaginate from "react-paginate";
-import AutosuggestHighlightParse from "autosuggest-highlight/parse";
 import Autosuggest from "react-autosuggest";
 
 const HomePage = ({
@@ -25,24 +19,23 @@ const HomePage = ({
   isBookmarkAddedModalOpen,
   handleAfterOpenBookmarkModal,
   handleBookmarkAddedModalClose,
+  inputProps,
+  renderSuggestion,
+  getSuggestionValue,
+  onSuggestionsClearRequested,
+  onSuggestionsFetchRequested,
+  suggestions,
+  searchAutosuggest,
+  debouncedSearch,
 }) => {
   const [data, setData] = useState({}); // data which is updated each time a research is made
-  const [wholeData, setWholeData] = useState([]); // data which is fetched just once: when the page is loaded.
-  // `wholeData` is used for the Autosuggest component
   const [isLoadingHomePage, setIsLoadingHomePage] = useState(true);
   const [isLoadingResults, setIsLoadingResults] = useState(true);
   const [isWelcomeModalOpen, setIsWelcomeModalOpen] = useState(false);
-  const [searchAutosuggest, setSearchAutosuggest] = useState("");
-  const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [forcePage, setForcePage] = useState(0); // to override selected page when a user is on a high number page and change the limit or make a research. Thus, this state enables to prevent from rendering a blank page !!!
-
-  const [debouncedSearch] = useDebounce(
-    escapeRegexCharacters(searchAutosuggest),
-    1000
-  ); // Wait a bit before reloading the page
 
   let history = useHistory();
 
@@ -51,21 +44,6 @@ const HomePage = ({
   const onboarding = params.onboarding;
 
   const pageCount = Math.ceil(data.count / limit);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://marvel-api-remi.herokuapp.com/characters`
-        );
-        setWholeData(response.data.results);
-      } catch (error) {
-        alert("an error has occured");
-      }
-    };
-    document.title = "Marvel App Rémi";
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,79 +109,15 @@ const HomePage = ({
     setLimit(e.target.value);
   };
 
-  // SEARCH BAR WITH AUTOCOMPLETION
-
-  const getSuggestions = (value) => {
-    const escapedValue = escapeRegexCharacters(value.trim());
-    if (escapedValue === "") {
-      return [];
-    }
-    const regex = new RegExp(escapedValue, "i");
-    const maxSuggestionsToDisplay = 7;
-    return wholeData.reduce((res, character) => {
-      if (
-        regex.test(character.name) &&
-        res.length <= maxSuggestionsToDisplay - 1 // add -1 to have exactly 7 suggestions at most instead of 8 otherwise
-      ) {
-        res.push(character);
-      }
-      return res;
-    }, []);
-  };
-
-  const getSuggestionValue = (suggestion) => suggestion.name;
-
-  const renderSuggestion = (suggestion, { query }) => {
-    const suggestionText = suggestion.name;
-    const matches = AutosuggestHighlightMatch(suggestionText, query);
-    const parts = AutosuggestHighlightParse(suggestionText, matches);
-
-    return (
-      <div className="suggestion-content">
-        <img
-          className="thumbnail"
-          src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
-          alt={suggestion.name}
-        />
-        {parts.map((part, index) => {
-          const className = part.highlight ? "highlight" : null;
-          return (
-            <span className={className} key={index}>
-              {part.text}
-            </span>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getSuggestions(value));
-  };
-
-  const onSuggestionsClearRequested = () => {
-    setSuggestions([]);
-  };
-
-  const handleOnChange = (event, { newValue }) => {
-    setSearchAutosuggest(newValue);
-  };
-
-  const inputProps = {
-    placeholder: "Aveng...",
-    value: searchAutosuggest,
-    onChange: handleOnChange,
-  };
-
   // MANAGE SEARCH BAR STYLE ACCORDING TO SCROLL
 
   window.addEventListener("scroll", () => {
     let scroll = window.scrollY; // Axe Y
-    const elem = document.querySelector(".react-autosuggest__input");
+    const elem = [...document.querySelectorAll(".react-autosuggest__input")][1]; // select the second search bar (not the first search bar in the header)
     if (scroll < 100) {
-      elem.style.width = "100%";
+      elem.style.width = "calc(100% - 2rem)";
     } else {
-      elem.style.width = "20%";
+      elem.style.width = "25%";
     }
   });
 
@@ -231,14 +145,16 @@ const HomePage = ({
       </Modal>{" "}
       <div className="container main-content-wrapper">
         <h2>Recherche ton super-héros préféré</h2>
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-        />
+        <div className="search-bar-page">
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+          />
+        </div>
         <div className="pagination-top">
           <p>{data.count} résultats</p>
           <label>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import CharacterPage from "./pages/CharacterPage";
 import HomePage from "./pages/HomePage";
@@ -8,9 +8,15 @@ import ComicsPage from "./pages/ComicsPage";
 import BookmarksPage from "./pages/BookmarksPage";
 import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
+import {
+  AutosuggestHighlightMatch,
+  escapeRegexCharacters,
+} from "./helpers/helper";
 
 import "./App.css";
 
+import AutosuggestHighlightParse from "autosuggest-highlight/parse";
+import { useDebounce } from "use-debounce";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -29,6 +35,95 @@ const App = () => {
   const [bookmarkName, setBookmarkName] = useState("");
   const [isBookmarkAddedModalOpen, setIsBookmarkAddedModalOpen] =
     useState(false);
+
+  const [wholeData, setWholeData] = useState([]); // data which is fetched just once: when the page is loaded.
+  // `wholeData` is used for the Autosuggest component
+  const [searchAutosuggest, setSearchAutosuggest] = useState("");
+  const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
+
+  const [debouncedSearch] = useDebounce(
+    escapeRegexCharacters(searchAutosuggest),
+    1000
+  ); // Wait a bit before reloading the page
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://marvel-api-remi.herokuapp.com/characters`
+        );
+        setWholeData(response.data.results);
+      } catch (error) {
+        alert("an error has occured");
+      }
+    };
+    document.title = "Marvel App Rémi";
+    fetchData();
+  }, []);
+
+  // SEARCH BAR WITH AUTOCOMPLETION
+
+  const getSuggestions = (value) => {
+    const escapedValue = escapeRegexCharacters(value.trim());
+    if (escapedValue === "") {
+      return [];
+    }
+    const regex = new RegExp(escapedValue, "i");
+    const maxSuggestionsToDisplay = 7;
+    return wholeData.reduce((res, character) => {
+      if (
+        regex.test(character.name) &&
+        res.length <= maxSuggestionsToDisplay - 1 // add -1 to have exactly 7 suggestions at most instead of 8 otherwise
+      ) {
+        res.push(character);
+      }
+      return res;
+    }, []);
+  };
+
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion, { query }) => {
+    const suggestionText = suggestion.name;
+    const matches = AutosuggestHighlightMatch(suggestionText, query);
+    const parts = AutosuggestHighlightParse(suggestionText, matches);
+
+    return (
+      <div className="suggestion-content">
+        <img
+          className="thumbnail"
+          src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
+          alt={suggestion.name}
+        />
+        {parts.map((part, index) => {
+          const className = part.highlight ? "highlight" : null;
+          return (
+            <span className={className} key={index}>
+              {part.text}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const handleOnChange = (event, { newValue }) => {
+    setSearchAutosuggest(newValue);
+  };
+
+  const inputProps = {
+    placeholder: "Aven..",
+    value: searchAutosuggest,
+    onChange: handleOnChange,
+  };
 
   // LOGIN AND SIGNUP
 
@@ -104,7 +199,16 @@ const App = () => {
 
   return (
     <Router>
-      <Header token={token} setToken={setToken} />
+      <Header
+        token={token}
+        setToken={setToken}
+        inputProps={inputProps}
+        renderSuggestion={renderSuggestion}
+        getSuggestionValue={getSuggestionValue}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        suggestions={suggestions}
+      />
       <Switch>
         <Route exact path="/">
           <HomePage
@@ -114,6 +218,13 @@ const App = () => {
             isBookmarkAddedModalOpen={isBookmarkAddedModalOpen}
             handleAfterOpenBookmarkModal={handleAfterOpenBookmarkModal}
             handleBookmarkAddedModalClose={handleBookmarkAddedModalClose}
+            inputProps={inputProps}
+            renderSuggestion={renderSuggestion}
+            getSuggestionValue={getSuggestionValue}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            suggestions={suggestions}
+            debouncedSearch={debouncedSearch}
           />
         </Route>
         <Route path="/character/:id">

@@ -15,6 +15,7 @@ const CurtainMenu = ({ token, setToken, className }) => {
     document.getElementById("my-nav-background").style.opacity = "1";
     document.getElementById("my-nav-background").style.width = "100%";
     document.body.style.overflow = "hidden"; // Prevent scrolling when the modal is activated
+    document.querySelector(".react-autosuggest__container").style.zIndex = -1;
   };
 
   const closeNav = () => {
@@ -22,6 +23,7 @@ const CurtainMenu = ({ token, setToken, className }) => {
     document.getElementById("my-nav-background").style.opacity = "0%";
     document.getElementById("my-nav-background").style.width = "0%";
     document.body.style.overflow = "auto"; // Enable again scrolling when the modal is desactivated
+    document.querySelector(".react-autosuggest__container").style.zIndex = 0;
   };
 
   useEffect(() => {

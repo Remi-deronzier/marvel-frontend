@@ -6,8 +6,18 @@ import logoMarvel from "../images/logo-marvel.svg";
 import { Link, useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 import Avatar from "react-avatar";
+import Autosuggest from "react-autosuggest";
 
-const Header = ({ token, setToken }) => {
+const Header = ({
+  token,
+  setToken,
+  inputProps,
+  renderSuggestion,
+  getSuggestionValue,
+  onSuggestionsClearRequested,
+  onSuggestionsFetchRequested,
+  suggestions,
+}) => {
   let history = useHistory();
 
   const handleLogout = () => {
@@ -70,6 +80,16 @@ const Header = ({ token, setToken }) => {
           token={token}
           setToken={setToken}
           className="curtain-menu"
+        />
+      </div>
+      <div className="search-bar-header container">
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={onSuggestionsClearRequested}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+          inputProps={inputProps}
         />
       </div>
     </header>
