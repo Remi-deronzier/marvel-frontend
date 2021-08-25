@@ -42,6 +42,7 @@ header img {
 
 .search-bar-header {
   display: none;
+  position: relative;
 }
 
 /* RESPONSIVE */

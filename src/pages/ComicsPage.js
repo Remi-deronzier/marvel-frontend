@@ -23,10 +23,12 @@ const ComicsPage = ({
   setWholeData,
   setKeyTitle,
   setPlaceholderAutosuggest,
+  isLoadingResults,
+  setIsLoadingResults,
 }) => {
   const [data, setData] = useState({}); // data which is updated each time a research is made
   const [isGlobalLoading, setIsGlobalLoading] = useState(true);
-  const [isLoadingResults, setIsLoadingResults] = useState(true);
+  // const [isLoadingResults, setIsLoadingResults] = useState(true);
   const [limit, setLimit] = useState(100);
   const [skip, setskip] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -75,7 +77,7 @@ const ComicsPage = ({
       }
     };
     fetchData();
-  }, [debouncedSearch, limit, skip, currentPage]);
+  }, [debouncedSearch, limit, skip, currentPage, setIsLoadingResults]);
 
   // BOOKMARKS
 

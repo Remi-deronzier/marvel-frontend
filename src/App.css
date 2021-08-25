@@ -5,6 +5,7 @@
   --transition-time-hover: 0.3s;
   --header-heigth: 8rem;
   --width-search-bar: 60%;
+  --background-color-gray: #292d33;
 }
 
 /* GENERAL SETTINGS */
@@ -20,7 +21,7 @@ html {
 body {
   font-size: 2rem;
   font-family: "Roboto", sans-serif;
-  background-color: #292d33;
+  background-color: var(--background-color-gray);
 
   /* Responsive footer */
   position: relative;

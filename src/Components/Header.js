@@ -1,4 +1,5 @@
 import CurtainMenu from "./CurtainMenu";
+import Loader from "./Loader";
 
 import "./Header.css";
 import logoMarvel from "../images/logo-marvel.svg";
@@ -17,6 +18,7 @@ const Header = ({
   onSuggestionsClearRequested,
   onSuggestionsFetchRequested,
   suggestions,
+  isLoadingResults,
 }) => {
   let history = useHistory();
 
@@ -91,6 +93,9 @@ const Header = ({
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
         />
+        {isLoadingResults && (
+          <Loader classNameLoader="results" classNameLoaderLocation="header" />
+        )}
       </div>
     </header>
   );

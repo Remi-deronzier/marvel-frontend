@@ -43,6 +43,7 @@ const App = () => {
   const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
   const [keyTitle, setKeyTitle] = useState("");
   const [placeholderAutosuggest, setPlaceholderAutosuggest] = useState("");
+  const [isLoadingResults, setIsLoadingResults] = useState(true);
 
   const [debouncedSearch] = useDebounce(
     escapeRegexCharacters(searchAutosuggest),
@@ -210,6 +211,7 @@ const App = () => {
         onSuggestionsClearRequested={onSuggestionsClearRequested}
         onSuggestionsFetchRequested={onSuggestionsFetchRequested}
         suggestions={suggestions}
+        isLoadingResults={isLoadingResults}
       />
       <Switch>
         <Route exact path="/">
@@ -230,6 +232,8 @@ const App = () => {
             setWholeData={setWholeData}
             setKeyTitle={setKeyTitle}
             setPlaceholderAutosuggest={setPlaceholderAutosuggest}
+            isLoadingResults={isLoadingResults}
+            setIsLoadingResults={setIsLoadingResults}
           />
         </Route>
         <Route path="/element/:id">
@@ -253,6 +257,8 @@ const App = () => {
             setWholeData={setWholeData}
             setKeyTitle={setKeyTitle}
             setPlaceholderAutosuggest={setPlaceholderAutosuggest}
+            isLoadingResults={isLoadingResults}
+            setIsLoadingResults={setIsLoadingResults}
           />
         </Route>
         <Route path="/bookmarks">

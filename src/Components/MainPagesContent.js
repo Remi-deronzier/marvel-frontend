@@ -1,5 +1,7 @@
 import Card from "./Card";
 
+import Loader from "./Loader";
+
 import "./MainPagesContent.css";
 
 import Modal from "react-modal";
@@ -38,7 +40,7 @@ const MainPages = ({
   style,
 }) => {
   return isGlobalLoading ? (
-    <p>En cours de chargement...</p>
+    <Loader classNameLoader="main" classNameLoaderLocation="page" />
   ) : (
     <>
       {displayWelcomeModal && (
@@ -72,6 +74,9 @@ const MainPages = ({
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
           />
+          {isLoadingResults && (
+            <Loader classNameLoader="results" classNameLoaderLocation="page" />
+          )}
         </div>
         <div className="pagination-top">
           <p>{data.count} résultats</p>
@@ -89,32 +94,28 @@ const MainPages = ({
             </select>
           </label>
         </div>
-        {isLoadingResults ? (
-          <p>Chargement des résultats...</p>
-        ) : (
-          <div className="main-content">
-            {data.count === 0 ? (
-              <div className="no-results">
-                <p className="p-no-results">Aucun résultat trouvé 😥 !!!</p>
-              </div>
-            ) : (
-              data.results.map((character, index) => {
-                return (
-                  <Card
-                    index={index}
-                    key={index}
-                    data={character}
-                    handleCreateBookmark={handleCreateBookmark}
-                    dispayMoreButton={dispayMoreButton}
-                    dispayBookmarkIcon={dispayBookmarkIcon}
-                    titleKey={titleKey}
-                    {...style}
-                  />
-                );
-              })
-            )}
-          </div>
-        )}{" "}
+        <div className="main-content">
+          {data.count === 0 ? (
+            <div className="no-results">
+              <p className="p-no-results">Aucun résultat trouvé 😥 !!!</p>
+            </div>
+          ) : (
+            data.results.map((character, index) => {
+              return (
+                <Card
+                  index={index}
+                  key={index}
+                  data={character}
+                  handleCreateBookmark={handleCreateBookmark}
+                  dispayMoreButton={dispayMoreButton}
+                  dispayBookmarkIcon={dispayBookmarkIcon}
+                  titleKey={titleKey}
+                  {...style}
+                />
+              );
+            })
+          )}
+        </div>
         {data.count !== 0 && (
           <ReactPaginate
             previousLabel={"<"}
