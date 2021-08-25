@@ -2,7 +2,7 @@ footer {
   width: 100%;
   text-align: center;
   height: 8rem;
-  background-color: #cac9c9;
+  background-color: #333333;
 
   /* Responsive footer */
   position: absolute;
@@ -17,13 +17,12 @@ footer {
 }
 
 .p-footer {
-  font-size: 2rem;
+  font-size: 1.6rem;
+  color: #fff;
 }
 
 .a-footer {
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
+  color: #5158b8;
 }
 
 .a-footer:hover {
