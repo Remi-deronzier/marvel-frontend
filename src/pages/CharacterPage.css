@@ -1,0 +1,23 @@
+.wrapper-page-character {
+  margin-top: calc(var(--header-heigth) + 7rem) !important;
+}
+
+.hero {
+  margin-top: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-comics-belonging {
+  text-align: center;
+  color: #fff;
+  font-size: 3rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 640px) {
+  .wrapper-page-character {
+    margin-top: calc(var(--header-heigth) + 13rem) !important;
+  }
+}

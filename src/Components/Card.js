@@ -12,9 +12,12 @@ const Card = ({
   titleKey,
   classNameTitle,
   classNameCallToAction,
+  classNameCardDetails,
+  classNameDescription,
+  classNameCard,
 }) => {
   return (
-    <div className="card">
+    <div className={`card ${classNameCard}`}>
       <div
         className={`card-title ${classNameTitle}`}
         style={{
@@ -29,10 +32,10 @@ const Card = ({
           alt={data[titleKey]}
         />
       </div>
-      <div className="card-details">
+      <div className={classNameCardDetails}>
         {data.description && (
           <div className="card-description">
-            <p>{data.description}</p>
+            <p className={classNameDescription}>{data.description}</p>
           </div>
         )}
         <div className={`card-call-to-action ${classNameCallToAction}`}>

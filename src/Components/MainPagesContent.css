@@ -1,20 +1,13 @@
-.main-content-wrapper {
-  margin-top: calc(var(--header-heigth) + 7rem) !important;
-}
-
-.main-content {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .no-results {
   display: flex;
   justify-content: center;
   color: #fff;
   width: 100%;
+  margin-bottom: 8rem;
 }
 
 .p-no-results {
+  text-align: center;
   padding: 2rem;
   background-color: var(--main-red);
 }
@@ -175,10 +168,6 @@
 
   .pagination-top p {
     margin-bottom: 2rem;
-  }
-
-  .main-content-wrapper {
-    margin-top: calc(var(--header-heigth) + 12rem) !important;
   }
 
   /* AUTOSUGGEST */

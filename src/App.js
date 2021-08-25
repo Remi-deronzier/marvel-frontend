@@ -42,8 +42,10 @@ const App = () => {
   const [searchAutosuggest, setSearchAutosuggest] = useState("");
   const [suggestions, setSuggestions] = useState([]); // suggestion for the Autosuggest component
   const [keyTitle, setKeyTitle] = useState("");
-  const [placeholderAutosuggest, setPlaceholderAutosuggest] = useState("");
-  const [isLoadingResults, setIsLoadingResults] = useState(true);
+  const [placeholderAutosuggest, setPlaceholderAutosuggest] =
+    useState("Hulk...");
+  const [isLoadingResults, setIsLoadingResults] = useState(false);
+  useState(true);
 
   const [debouncedSearch] = useDebounce(
     escapeRegexCharacters(searchAutosuggest),
@@ -236,7 +238,7 @@ const App = () => {
             setIsLoadingResults={setIsLoadingResults}
           />
         </Route>
-        <Route path="/element/:id">
+        <Route path="/character/:id">
           <CharacterPage />
         </Route>
         <Route path="/comics">

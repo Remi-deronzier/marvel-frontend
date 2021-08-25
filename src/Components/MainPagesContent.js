@@ -9,7 +9,7 @@ import Autosuggest from "react-autosuggest";
 import Cookies from "js-cookie";
 import ReactPaginate from "react-paginate";
 
-const MainPages = ({
+const MainPagesContent = ({
   isGlobalLoading,
   isWelcomeModalOpen,
   handleWelcomeModalClose,
@@ -140,4 +140,4 @@ const MainPages = ({
   );
 };
 
-export default MainPages;
+export default MainPagesContent;

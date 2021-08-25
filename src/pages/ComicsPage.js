@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MainPages from "../Components/MainPagesContent";
+import MainPagesContent from "../Components/MainPagesContent";
 
 import axios from "axios";
 import * as qs from "qs";
@@ -104,6 +104,8 @@ const ComicsPage = ({
   const style = {
     classNameTitle: "card-title-comics",
     classNameCallToAction: "card-call-to-action-comics",
+    classNameCardDetails: "card-details",
+    classNameCard: "",
   };
 
   const props = {
@@ -136,7 +138,7 @@ const ComicsPage = ({
 
   return (
     <div>
-      <MainPages {...props} />
+      <MainPagesContent {...props} />
     </div>
   );
 };

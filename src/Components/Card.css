@@ -3,6 +3,10 @@
   margin-bottom: 5rem;
 }
 
+.card-character-page {
+  width: 50%;
+}
+
 .card:not(:nth-child(3n)) {
   margin-right: 3rem;
 }
@@ -44,6 +48,15 @@
   background-color: #fff;
 }
 
+.card-details-character-page {
+  padding: 0;
+  background-color: #fff;
+}
+
+.p-description {
+  padding: 2rem;
+}
+
 .card-description {
   text-align: center;
   margin-bottom: 2rem;
@@ -51,6 +64,10 @@
 
 .card-call-to-action {
   display: flex;
+}
+
+.card-call-to-action-character-page {
+  display: none;
 }
 
 .card-call-to-action-characters {

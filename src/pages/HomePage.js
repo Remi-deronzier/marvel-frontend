@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MainPages from "../Components/MainPagesContent";
+import MainPagesContent from "../Components/MainPagesContent";
 
 import axios from "axios";
 import { useHistory, useLocation } from "react-router-dom";
@@ -126,6 +126,8 @@ const HomePage = ({
   const style = {
     classNameTitle: "card-title-characters",
     classNameCallToAction: "card-call-to-action-characters",
+    classNameCardDetails: "card-details",
+    classNameCard: "",
   };
 
   const props = {
@@ -161,7 +163,7 @@ const HomePage = ({
 
   return (
     <div>
-      <MainPages {...props} />
+      <MainPagesContent {...props} />
     </div>
   );
 };
