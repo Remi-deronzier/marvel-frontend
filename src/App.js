@@ -26,9 +26,10 @@ import {
   faEye,
   faTimes,
   faBars,
+  faQuestionCircle,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-library.add(faBookmark, faEye, faTimes, faBars, faSearch);
+library.add(faBookmark, faEye, faTimes, faBars, faQuestionCircle, faSearch);
 
 const App = () => {
   const [token, setToken] = useState(Cookies.get("token") || "");

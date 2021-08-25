@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 
+import LoginSignupContent from "../Components/LoginSignupContent";
+
 import axios from "axios";
-import { useHistory, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory } from "react-router-dom";
 
 const LoginPage = ({
   handleLoginSignup,
@@ -11,12 +12,11 @@ const LoginPage = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRevealedPwd, setIsRevealedPwd] = useState(false);
 
   let history = useHistory();
 
   useEffect(() => {
-    document.title = "Connection - Marvel";
+    document.title = "Connexion - Marvel";
   }, []);
 
   const login = async () => {
@@ -52,45 +52,19 @@ const LoginPage = ({
     setPassword(e.target.value);
   };
 
-  const handleRevealPwd = () => {
-    setIsRevealedPwd(!isRevealedPwd);
-  };
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email *"
-          value={email}
-          onChange={handleEmail}
-          required
-        />
-        <div className="div-password">
-          <input
-            className="input-signup-login input"
-            type={isRevealedPwd ? "text" : "password"}
-            placeholder="Mot de passe *"
-            value={password}
-            onChange={handlePassword}
-            required
-          />
-          <FontAwesomeIcon
-            icon="eye"
-            className="icon-eye"
-            onClick={handleRevealPwd}
-          />
-        </div>
-        <p>
-          <span>* </span>Champs obligatoires
-        </p>
-        <button type="submit" id="submit-btn">
-          Se connecter
-        </button>
-      </form>
-      <Link to="/signup">
-        <p>Pas encore de compte ? Inscris-toi !</p>
-      </Link>
-    </div>
+    <LoginSignupContent
+      handleSubmit={handleSubmit}
+      email={email}
+      handleEmail={handleEmail}
+      password={password}
+      handlePassword={handlePassword}
+      buttonSubmissionContent="Se connecter"
+      redirectionLink="/signup"
+      redirectionContent="Pas encore de compte ? Inscris-toi !"
+      displayUsername={false}
+      h1Content="Se connecter"
+    />
   );
 };
 

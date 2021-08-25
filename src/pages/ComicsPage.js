@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MainPages from "../Components/MainPages";
+import MainPages from "../Components/MainPagesContent";
 
 import axios from "axios";
 import * as qs from "qs";

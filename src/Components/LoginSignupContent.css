@@ -1,0 +1,95 @@
+.wrapper-form-signup-login {
+  margin-top: calc(var(--header-heigth) + 7rem);
+  background-color: #fff;
+  width: 40rem;
+  padding: 2rem 3rem;
+  box-sizing: border-box;
+}
+
+.login-signup-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-signup-login {
+  font-weight: bold;
+  font-size: 3rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.submission-form-login-signup {
+  display: flex;
+  justify-content: center;
+}
+
+.login-signup-form {
+  width: 100%;
+}
+
+.login-signup-form input {
+  outline: none;
+  border: none;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 0.1rem solid #d6d6d6;
+  font-size: 1.8rem;
+  transition: all 0.3s;
+}
+
+.login-signup-form input:focus {
+  border-bottom: 0.1rem solid var(--main-red);
+}
+
+.input-username-email {
+  margin-bottom: 2rem;
+}
+
+.div-password {
+  position: relative;
+}
+
+.icon-eye {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #757575;
+}
+
+.p-mandatory-fields {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+.asterisk {
+  color: red;
+}
+
+.btn-submission {
+  margin: 4rem 0 2rem 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.button-login-signup-submission {
+  font-size: 2rem;
+}
+
+.login-signup-redirection {
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+/* RESONSIVE */
+
+@media (max-width: 640px) {
+  .wrapper-form-signup-login {
+    margin-top: calc(var(--header-heigth) + 12rem);
+  }
+}

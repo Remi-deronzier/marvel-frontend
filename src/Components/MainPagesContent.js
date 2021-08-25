@@ -1,6 +1,6 @@
 import Card from "./Card";
 
-import "./MainPages.css";
+import "./MainPagesContent.css";
 
 import Modal from "react-modal";
 import Autosuggest from "react-autosuggest";

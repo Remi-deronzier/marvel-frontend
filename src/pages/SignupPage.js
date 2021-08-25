@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 
+import LoginSignupContent from "../Components/LoginSignupContent";
+
 import axios from "axios";
-import { useHistory, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useHistory } from "react-router-dom";
 
 const SignupPage = ({
   handleLoginSignup,
@@ -12,7 +13,6 @@ const SignupPage = ({
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isRevealedPwd, setIsRevealedPwd] = useState(false);
 
   let history = useHistory();
 
@@ -58,53 +58,21 @@ const SignupPage = ({
     setPassword(e.target.value);
   };
 
-  const handleRevealPwd = () => {
-    setIsRevealedPwd(!isRevealedPwd);
-  };
-
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nom d'utilisateur *"
-          value={username}
-          onChange={handleUsername}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email *"
-          value={email}
-          onChange={handleEmail}
-          required
-        />
-        <div className="div-password">
-          <input
-            className="input-signup-login input"
-            type={isRevealedPwd ? "text" : "password"}
-            placeholder="Mot de passe *"
-            value={password}
-            onChange={handlePassword}
-            required
-          />
-          <FontAwesomeIcon
-            icon="eye"
-            className="icon-eye"
-            onClick={handleRevealPwd}
-          />
-        </div>
-        <p>
-          <span>* </span>Champs obligatoires
-        </p>
-        <button type="submit" id="submit-btn">
-          S'inscrire
-        </button>
-      </form>
-      <Link to="/login">
-        <p>Tu as déjà un compte ? Connecte-toi !</p>
-      </Link>
-    </div>
+    <LoginSignupContent
+      handleSubmit={handleSubmit}
+      username={username}
+      handleUsername={handleUsername}
+      email={email}
+      handleEmail={handleEmail}
+      password={password}
+      handlePassword={handlePassword}
+      buttonSubmissionContent="S'inscrire"
+      redirectionLink="/login"
+      redirectionContent="Tu as déjà un compte ? Connecte-toi !"
+      displayUsername={true}
+      h1Content="S'inscrire"
+    />
   );
 };
 

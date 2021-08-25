@@ -70,6 +70,13 @@ button {
   box-sizing: border-box;
 }
 
+/* LINK */
+
+a {
+  text-decoration: none;
+  color: var(--main-red);
+}
+
 /* RESPONSIVE */
 
 @media (max-width: 1260px) {

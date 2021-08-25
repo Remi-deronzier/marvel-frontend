@@ -10,12 +10,11 @@
 .card-title {
   color: #fff;
   text-transform: uppercase;
-  height: 12rem;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   text-align: center;
-  padding: 0 1rem;
+  padding: 1rem 2rem;
   box-sizing: border-box;
 }
 
