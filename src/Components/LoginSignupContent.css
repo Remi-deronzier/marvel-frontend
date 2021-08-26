@@ -1,5 +1,6 @@
 .wrapper-form-signup-login {
   margin-top: calc(var(--header-heigth) + 7rem);
+  margin-bottom: 5rem;
   background-color: #fff;
   width: 40rem;
   padding: 2rem 3rem;
