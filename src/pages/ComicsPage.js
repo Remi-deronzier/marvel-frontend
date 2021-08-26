@@ -51,7 +51,7 @@ const ComicsPage = ({
         alert("an error has occured");
       }
     };
-    document.title = "Marvel Comics";
+    document.title = "BD - Marvel";
     fetchData();
   }, [setWholeData, setKeyTitle, setPlaceholderAutosuggest]);
 
