@@ -3,6 +3,7 @@ import Card from "./Card";
 import Loader from "./Loader";
 
 import "./MainPagesContent.css";
+import "../Components/Modal.css";
 
 import Modal from "react-modal";
 import Autosuggest from "react-autosuggest";
@@ -49,6 +50,7 @@ const MainPagesContent = ({
           onRequestClose={handleWelcomeModalClose}
           onAfterOpen={handleAfterOpenWelcomeModal}
           ariaHideApp={false}
+          className="modal"
         >
           Bonjour <u>{Cookies.get("username")}</u>, bienvenue sur la meilleure
           API de MARVEL ! 🎉
@@ -59,8 +61,9 @@ const MainPagesContent = ({
         onRequestClose={handleBookmarkAddedModalClose}
         onAfterOpen={handleAfterOpenBookmarkModal}
         ariaHideApp={false}
+        className="modal"
       >
-        Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
+        🔖 Ton marque-page <u>{bookmarkName}</u> a bien été ajouté à tes favoris
         !!!
       </Modal>{" "}
       <div className="container main-content-wrapper">

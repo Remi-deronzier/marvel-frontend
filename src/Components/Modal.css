@@ -1,0 +1,15 @@
+.modal {
+  position: fixed;
+  top: 20rem;
+  left: 50%;
+  width: 80%;
+  transform: translateX(-50%);
+  background-color: var(--main-red);
+  padding: 1rem;
+  box-sizing: border-box;
+  box-shadow: 0.3rem 0.3rem 4rem 0.5rem #ccc;
+  outline: none;
+  color: white;
+  text-align: center;
+  line-height: 2.5rem;
+}

@@ -184,6 +184,7 @@ const App = () => {
       handleEndSubmission();
       setBookmarkName(name);
       setIsBookmarkAddedModalOpen(true);
+      document.body.style.overflow = "hidden"; // Prevent scrolling when the modal is activated
     } catch (error) {
       handleEndSubmission();
       alert(error.response.data.message);
@@ -194,11 +195,13 @@ const App = () => {
 
   const handleBookmarkAddedModalClose = () => {
     setIsBookmarkAddedModalOpen(false);
+    document.body.style.overflow = "auto"; // Enable again scrolling when the modal is desactivated
   };
 
   const handleAfterOpenBookmarkModal = () => {
     setTimeout(() => {
       setIsBookmarkAddedModalOpen(false);
+      document.body.style.overflow = "auto"; // Enable again scrolling when the modal is desactivated
     }, 7000);
   };
 

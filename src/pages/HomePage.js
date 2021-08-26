@@ -86,6 +86,7 @@ const HomePage = ({
   useEffect(() => {
     if (onboarding) {
       setIsWelcomeModalOpen(true); // trigger a welcome modal when the user sign up for the first time
+      document.body.style.overflow = "hidden"; // Prevent scrolling when the modal is activated
     }
   }, [onboarding]);
 
@@ -103,11 +104,13 @@ const HomePage = ({
 
   const handleWelcomeModalClose = () => {
     setIsWelcomeModalOpen(false);
+    document.body.style.overflow = "auto"; // Enable again scrolling when the modal is desactivated
   };
 
   const handleAfterOpenWelcomeModal = () => {
     setTimeout(() => {
       setIsWelcomeModalOpen(false);
+      document.body.style.overflow = "auto"; // Enable again scrolling when the modal is desactivated
     }, 7000);
   };
 
