@@ -120,6 +120,7 @@ const HomePage = ({
     const selected = data.selected;
     setCurrentPage(selected);
     setskip(limit * selected);
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to top of page after clicking on a page number
   };
 
   const handleChangeSelect = (e) => {

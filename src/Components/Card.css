@@ -91,6 +91,13 @@
   justify-content: center;
 }
 
+/* TOOLTIP */
+
+.tooltip {
+  width: 20rem;
+  text-align: center;
+}
+
 /* RESPONSIVE */
 
 @media (max-width: 1260px) {

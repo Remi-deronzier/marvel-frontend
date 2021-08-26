@@ -66,6 +66,7 @@ button {
   font-weight: bold;
   cursor: pointer;
   font-family: "Roboto", sans-serif;
+  transition: transform 0.4s;
 }
 
 .button-filled-with-red {
@@ -78,6 +79,10 @@ button {
   border: 0.1rem solid var(--main-red);
   color: var(--main-red);
   box-sizing: border-box;
+}
+
+button:hover {
+  transform: scale(1.1);
 }
 
 /* LINK */

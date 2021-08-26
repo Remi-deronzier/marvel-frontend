@@ -35,7 +35,11 @@ const LoginPage = ({
       history.push("/bookmarks");
     } catch (error) {
       handleFormEndSubmission();
-      alert(error.response.data.message);
+      if (error.response.data.message === "Unauthorized") {
+        alert("Wrong email or password");
+      } else {
+        alert(error.response.data.message);
+      }
     }
   };
 

@@ -86,14 +86,16 @@ const App = () => {
           src={`${suggestion.thumbnail.path}.${suggestion.thumbnail.extension}`}
           alt={suggestion[keyTitle]}
         />
-        {parts.map((part, index) => {
-          const className = part.highlight ? "highlight" : null;
-          return (
-            <span className={className} key={index}>
-              {part.text}
-            </span>
-          );
-        })}
+        <p className="p-autosuggest">
+          {parts.map((part, index) => {
+            const className = part.highlight ? "highlight" : null;
+            return (
+              <span className={className} key={index}>
+                {part.text}
+              </span>
+            );
+          })}
+        </p>
       </div>
     );
   };
@@ -145,18 +147,22 @@ const App = () => {
     [...document.querySelectorAll("#submit-btn")].map((e) =>
       e.setAttribute("disabled", "disabled")
     ); // Disable the button;
-    document
-      .querySelector(".loader-circle")
-      .classList.remove("loader-circle-hidden"); // Launch the loader
+    if (document.querySelector(".loader-circle")) {
+      document
+        .querySelector(".loader-circle")
+        .classList.remove("loader-circle-hidden"); // Launch the loader
+    }
   };
 
   const handleEndSubmission = () => {
     [...document.querySelectorAll("#submit-btn")].map((e) =>
       e.removeAttribute("disabled")
     ); // Enable the button;
-    document
-      .querySelector(".loader-circle")
-      .classList.add("loader-circle-hidden"); // Stop the loader
+    if (document.querySelector(".loader-circle")) {
+      document
+        .querySelector(".loader-circle")
+        .classList.add("loader-circle-hidden"); // Stop the loader
+    }
   };
 
   // CREATE A BOOKMARK

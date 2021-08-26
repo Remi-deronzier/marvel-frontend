@@ -2,6 +2,7 @@ import "./Card.css";
 
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ReactTooltip from "react-tooltip";
 
 const Card = ({
   data,
@@ -61,19 +62,28 @@ const Card = ({
         )}
         <div className={`card-call-to-action ${classNameCallToAction}`}>
           {dispayBookmarkIcon && (
-            <button
-              className="button-with-red-border"
-              id="submit-btn"
-              onClick={() =>
-                handleCreateBookmark(
-                  data[titleKey],
-                  data.description,
-                  data.thumbnail
-                )
-              }
-            >
-              <FontAwesomeIcon icon="bookmark" />
-            </button>
+            <>
+              <button
+                data-tip="Clique sur l'icône pour ajouter cette carte à tes favoris"
+                className="button-with-red-border"
+                id="submit-btn"
+                onClick={() =>
+                  handleCreateBookmark(
+                    data[titleKey],
+                    data.description,
+                    data.thumbnail
+                  )
+                }
+              >
+                <FontAwesomeIcon icon="bookmark" />
+              </button>
+              <ReactTooltip
+                place="bottom"
+                type="dark"
+                effect="solid"
+                className="tooltip"
+              />
+            </>
           )}
           {dispayMoreButton && (
             <Link to={`/character/${data._id}`}>

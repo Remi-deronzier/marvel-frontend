@@ -29,7 +29,9 @@ const BookmarksPage = ({ token }) => {
         setBookmarks(response.data);
         setIsLoading(false);
       } catch (error) {
-        alert(error.response.data.error);
+        if (error.response.data.error !== "Unauthorized") {
+          alert(error.response.data.error);
+        }
       }
     };
     fetchData();
