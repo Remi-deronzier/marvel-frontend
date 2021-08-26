@@ -11,7 +11,8 @@
   margin-right: 3rem;
 }
 
-.card-title {
+.card-title,
+.card-bookmark-name {
   color: #fff;
   text-transform: uppercase;
   display: flex;
@@ -22,17 +23,29 @@
   box-sizing: border-box;
 }
 
+.card-bookmark-name {
+  width: 90%;
+  box-shadow: 0.4rem 0.4rem 5rem #000;
+  position: absolute;
+  top: 2rem;
+}
+
 .card-title-characters {
   font-size: 3rem;
+  width: 100%;
   line-height: 4rem;
 }
 
 .card-title-comics {
+  width: 100%;
   font-size: 2.6rem;
   line-height: 3rem;
 }
 
 .card-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 40rem;
 }

@@ -16,6 +16,12 @@
   margin-bottom: 3rem;
 }
 
+.main-content-bookmarks {
+  margin-top: 5rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 640px) {
   .wrapper-page-character {
     margin-top: calc(var(--header-heigth) + 13rem) !important;

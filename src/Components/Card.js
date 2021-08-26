@@ -15,6 +15,7 @@ const Card = ({
   classNameCardDetails,
   classNameDescription,
   classNameCard,
+  displayBookmarkName,
 }) => {
   return (
     <div className={`card ${classNameCard}`}>
@@ -26,9 +27,29 @@ const Card = ({
       >
         <p>{data[titleKey]}</p>
       </div>
-      <div className="card-image">
+      <div
+        className="card-image"
+        style={{ position: displayBookmarkName && "relative" }}
+      >
+        {displayBookmarkName && (
+          <div
+            className="card-bookmark-name"
+            style={{
+              backgroundColor:
+                index % 3 === 1
+                  ? "rgb(246, 12, 2, 0.6)"
+                  : "rgb(85, 92, 102,0.8)",
+            }}
+          >
+            <p>{data.name}</p>
+          </div>
+        )}
         <img
-          src={`${data.thumbnail.path}.${data.thumbnail.extension}`}
+          src={
+            data.thumbnail
+              ? `${data.thumbnail.path}.${data.thumbnail.extension}`
+              : `${data.thumbnail_path}.${data.thumbnail_extension}`
+          }
           alt={data[titleKey]}
         />
       </div>

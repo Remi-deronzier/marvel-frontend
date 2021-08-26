@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+import Card from "../Components/Card";
+import Loader from "../Components/Loader";
+
+import "./CharacterAndBookmarkPages.css";
+
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -28,31 +33,49 @@ const BookmarksPage = ({ token }) => {
       }
     };
     fetchData();
-    document.title = "Your bookmarks - Marvel";
+    document.title = "Tes favoris - Marvel";
   }, [token]);
+
+  const style = {
+    classNameTitle: "card-title-comics",
+    classNameCardDetails: "card-details-character-page",
+    classNameCallToAction: "card-call-to-action-character-page",
+    classNameDescription: "p-description",
+    classNameCard: "",
+  };
 
   return token ? (
     isLoading ? (
-      <p>En cours de chargement...</p>
+      <Loader classNameLoader="main" classNameLoaderLocation="page" />
     ) : (
-      <div>
-        {bookmarks.length === 0 ? (
-          <p>Tu n'as pas encore enregistré de favoris</p>
-        ) : (
-          bookmarks.map((bookmark, index) => {
-            return (
-              <div key={index}>
-                <p>{bookmark.name}</p>
-                <img
-                  src={`${bookmark.thumbnail_path}.${bookmark.thumbnail_extension}`}
-                  alt={bookmark.title}
-                />
-                <p>{bookmark.title}</p>
-                <p>{bookmark.description}</p>
-              </div>
-            );
-          })
-        )}
+      <div className="container wrapper-page-character">
+        <h2>Tes favoris</h2>
+        <div className="main-content-bookmarks">
+          {bookmarks.length === 0 ? (
+            <div className="no-results">
+              <p className="p-no-results">
+                Tu n'as pas encore enregistré de favoris
+              </p>
+            </div>
+          ) : (
+            <>
+              {bookmarks.map((bookmark, index) => {
+                return (
+                  <Card
+                    index={index}
+                    key={index}
+                    data={bookmark}
+                    dispayMoreButton={false}
+                    dispayBookmarkIcon={false}
+                    titleKey="title"
+                    {...style}
+                    displayBookmarkName={true}
+                  />
+                );
+              })}
+            </>
+          )}
+        </div>
       </div>
     )
   ) : (

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Card from "../Components/Card";
 import Loader from "../Components/Loader";
 
-import "./CharacterPage.css";
+import "./CharacterAndBookmarkPages.css";
 
 import axios from "axios";
 import { useParams } from "react-router-dom";
