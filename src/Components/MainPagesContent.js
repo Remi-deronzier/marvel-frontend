@@ -84,7 +84,7 @@ const MainPagesContent = ({
         <div className="pagination-top">
           <p>{data.count} résultats</p>
           <label>
-            Nombre de résultats à afficher :
+            Nombre de résultats à afficher :{" "}
             <select
               className="select-limit"
               value={limit}
