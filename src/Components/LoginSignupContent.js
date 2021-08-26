@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import LoaderSubmission from "./LoaderSubmission";
+
 import "./LoginSignupContent.css";
 
 import { Link } from "react-router-dom";
@@ -71,9 +73,10 @@ const LoginSignupContent = ({
               <button
                 type="submit"
                 id="submit-btn"
-                className="button-filled-with-red button-login-signup-submission"
+                className="button-filled-with-red button-login-signup-submission btn-signup-login"
               >
                 {buttonSubmissionContent}
+                <LoaderSubmission />
               </button>
             </div>
           </form>

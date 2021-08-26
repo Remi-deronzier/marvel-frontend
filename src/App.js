@@ -145,12 +145,18 @@ const App = () => {
     [...document.querySelectorAll("#submit-btn")].map((e) =>
       e.setAttribute("disabled", "disabled")
     ); // Disable the button;
+    document
+      .querySelector(".loader-circle")
+      .classList.remove("loader-circle-hidden"); // Launch the loader
   };
 
   const handleEndSubmission = () => {
     [...document.querySelectorAll("#submit-btn")].map((e) =>
       e.removeAttribute("disabled")
     ); // Enable the button;
+    document
+      .querySelector(".loader-circle")
+      .classList.add("loader-circle-hidden"); // Stop the loader
   };
 
   // CREATE A BOOKMARK
