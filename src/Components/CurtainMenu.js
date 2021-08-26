@@ -47,6 +47,7 @@ const CurtainMenu = ({ token, setToken, className }) => {
   const handleLogout = () => {
     Cookies.remove("token");
     Cookies.remove("username");
+    Cookies.remove("userID");
     setToken("");
     history.push("/");
     closeNav();
