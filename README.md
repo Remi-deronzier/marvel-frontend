@@ -11,6 +11,8 @@
 ## Overview
 This project aims at creating a funny web app around the Marvel universe. You can browse your favorite Marvel character as well as your favorite comics thanks to this web app. You can also save as bookmark the characters and comics you particularly like. No frameworks UI like Bootstrap or Material UI are used.
 
+Backend project is here: 👉 [Backend](https://github.com/Remi-deronzier/marvel-api)
+
 ## Installation and usage
 Be sure, you have installed all dependencies and applications to run React Native project on your computer : [Getting Started with React](https://reactjs.org/docs/getting-started.html).
 
