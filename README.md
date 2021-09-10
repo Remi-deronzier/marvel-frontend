@@ -2,5 +2,5 @@
 
 <h1 align="center">Marvel web app - React</h1>
 <p align="center">
-  ![marvel-demo](https://user-images.githubusercontent.com/49198371/132917915-701916e4-cf4e-4e3b-bd10-50e6f768a362.gif)
+  <img src="https://user-images.githubusercontent.com/49198371/132917998-9b84d0f1-1bbd-4ec4-9c36-fde78f9c64f3.gif" alt="marvel-demo"/>
 </p>
